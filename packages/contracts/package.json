@@ -1,0 +1,9 @@
+{
+  "name": "@crypto-gutenberg/contracts",
+  "version": "0.1.0",
+  "main": "index.js",
+  "license": "MIT",
+  "devDependencies": {
+    "hardhat": "^2.10.1"
+  }
+}
