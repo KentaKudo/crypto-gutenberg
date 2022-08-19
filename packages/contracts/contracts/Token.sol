@@ -9,10 +9,12 @@ import { ERC721Enumerable } from "@openzeppelin/contracts/token/ERC721/extension
 import { IToken } from "./interfaces/IToken.sol";
 
 contract Token is IToken, Ownable, ERC721Enumerable {
+  uint256 private _currentTokenId;
+
   constructor() ERC721("Crypto Gutenberg", "CRYPTOGUTENBERG") {}
 
   function mint() public returns (uint256) {
-    uint256 tokenId = 123;
+    uint256 tokenId = _currentTokenId++;
     _mint(msg.sender, tokenId);
     return tokenId;
   }
