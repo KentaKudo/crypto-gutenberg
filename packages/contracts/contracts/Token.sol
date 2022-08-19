@@ -20,7 +20,6 @@ contract Token is IToken, Ownable, ERC721Enumerable {
 
   function mint(ILibrary.Paragraph memory _paragraph) public returns (uint256) {
     uint256 paragraphId = _library.register(_paragraph);
-    // store paragraphId
     _mint(msg.sender, paragraphId);
     return paragraphId;
   }
