@@ -6,16 +6,22 @@ import { Ownable } from "@openzeppelin/contracts/access/Ownable.sol";
 import { ERC721 } from "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 import { ERC721Enumerable } from "@openzeppelin/contracts/token/ERC721/extensions/ERC721Enumerable.sol";
 
+import { ILibrary } from "./interfaces/ILibrary.sol";
 import { IToken } from "./interfaces/IToken.sol";
 
 contract Token is IToken, Ownable, ERC721Enumerable {
-  uint256 private _currentTokenId;
+  ILibrary public immutable _library;
 
-  constructor() ERC721("Crypto Gutenberg", "CRYPTOGUTENBERG") {}
+  constructor(ILibrary __library)
+    ERC721("Crypto Gutenberg", "CRYPTOGUTENBERG")
+  {
+    _library = __library;
+  }
 
-  function mint() public returns (uint256) {
-    uint256 tokenId = _currentTokenId++;
-    _mint(msg.sender, tokenId);
-    return tokenId;
+  function mint(ILibrary.Paragraph memory _paragraph) public returns (uint256) {
+    uint256 paragraphId = _library.register(_paragraph);
+    // store paragraphId
+    _mint(msg.sender, paragraphId);
+    return paragraphId;
   }
 }
