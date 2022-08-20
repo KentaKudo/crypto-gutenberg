@@ -8,20 +8,20 @@ interface ILibrary {
     string author;
   }
 
-  struct SectionInfo {
+  struct ChapterInfo {
     uint256 bookId;
     string title;
   }
 
   struct ParagraphInfo {
     uint256 bookId;
-    uint256 sectionId;
+    uint256 chapterId;
     string text;
   }
 
   function registerBook(BookInfo memory _book) external returns (uint256);
 
-  function registerSection(SectionInfo memory _section)
+  function registerChapter(ChapterInfo memory _chapter)
     external
     returns (uint256);
 

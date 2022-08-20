@@ -8,12 +8,12 @@ contract Library is ILibrary {
   struct Book {
     string title;
     string author;
-    Section[] sections;
+    Chapter[] chapters;
   }
 
   uint256 private nextBookIndex = 1;
 
-  struct Section {
+  struct Chapter {
     string title;
     string[] paragraphs;
   }
@@ -24,7 +24,7 @@ contract Library is ILibrary {
     return 1;
   }
 
-  function registerSection(SectionInfo memory _section)
+  function registerChapter(ChapterInfo memory _chapter)
     external
     pure
     returns (uint256)
