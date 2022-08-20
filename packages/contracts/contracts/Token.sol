@@ -25,7 +25,7 @@ contract Token is IToken, Ownable, ERC721Enumerable {
     public
     returns (uint256)
   {
-    uint256 paragraphId = registry.registerParagraph(_paragraph);
+    uint256 paragraphId = registry.register(_paragraph);
     uint256 tokenId = _currentTokenId++;
     tokenIdToParagraphId[tokenId] = paragraphId;
     _mint(msg.sender, tokenId);

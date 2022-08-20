@@ -11,28 +11,20 @@ contract Registry is IRegistry {
     Chapter[] chapters;
   }
 
-  uint256 private nextBookIndex = 1;
-
   struct Chapter {
     string title;
-    string[] paragraphs;
+    Paragraph[] paragraphs;
   }
 
-  mapping(uint256 => Book) private books;
-
-  function registerBook(BookInfo memory _book) external pure returns (uint256) {
-    return 1;
+  struct Paragraph {
+    uint256 id;
+    string text;
   }
 
-  function registerChapter(ChapterInfo memory _chapter)
-    external
-    pure
-    returns (uint256)
-  {
-    return 1;
-  }
+  uint256 private _currentParagraphId;
+  Book[] private books;
 
-  function registerParagraph(ParagraphInfo memory _paragragh)
+  function register(ParagraphInfo memory _paragragh)
     external
     pure
     returns (uint256)
