@@ -2,9 +2,9 @@
 
 pragma solidity ^0.8.6;
 
-import { ILibrary } from "./interfaces/ILibrary.sol";
+import { IRegistry } from "./interfaces/IRegistry.sol";
 
-contract Library is ILibrary {
+contract Registry is IRegistry {
   struct Book {
     string title;
     string author;
