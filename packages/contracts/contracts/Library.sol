@@ -10,12 +10,12 @@ contract Library is ILibrary {
   struct Book {
     string title;
     string author;
-    Chapter[] chapters;
+    uint256 nrOfChapters;
   }
 
   struct Chapter {
     string title;
-    Paragraph[] paragraphs;
+    uint256 nrOfParagraphs;
   }
 
   struct Paragraph {
@@ -23,22 +23,31 @@ contract Library is ILibrary {
     string text;
   }
 
-  uint256 private _nextBookId = 1; // 0 indicates null value
-  uint256 private _currentParagraphId;
+  uint256 private _nextBookId;
+
+  // globally unique identifier for paragraphs.
+  uint256 private _nextParagraphId;
+
   mapping(uint256 => Book) private books;
+
+  mapping(uint256 => mapping(uint256 => Chapter)) chapters;
+
+  mapping(uint256 => mapping(uint256 => mapping(uint256 => Paragraph))) paragraphs;
 
   function addBook(BookInfo memory _book) external returns (uint256) {
     uint256 id = _nextBookId++;
 
-    Book storage book = books[id];
-    book.title = _book.title;
-    book.author = _book.author;
+    books[id] = Book({
+      title: _book.title,
+      author: _book.author,
+      nrOfChapters: _book.chapters.length
+    });
 
     for (uint256 i = 0; i < _book.chapters.length; i++) {
-      Chapter memory chapter;
-      chapter.title = _book.chapters[i];
-
-      book.chapters.push(chapter);
+      chapters[id][i] = Chapter({
+        title: _book.chapters[i].title,
+        nrOfParagraphs: _book.chapters[i].nrOfParagraphs
+      });
     }
 
     return id;

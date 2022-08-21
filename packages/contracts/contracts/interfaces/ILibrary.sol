@@ -6,7 +6,12 @@ interface ILibrary {
   struct BookInfo {
     string title;
     string author;
-    string[] chapters;
+    ChapterInfo[] chapters;
+  }
+
+  struct ChapterInfo {
+    string title;
+    uint256 nrOfParagraphs;
   }
 
   struct ParagraphInfo {
