@@ -11,7 +11,6 @@ interface ILibrary {
 
   struct ChapterInfo {
     string title;
-    uint256 nrOfParagraphs;
   }
 
   struct ParagraphInfo {
