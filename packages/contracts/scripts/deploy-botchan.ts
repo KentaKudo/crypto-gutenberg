@@ -8,12 +8,12 @@ async function main() {
 
   console.log(`library deployed to: ${library.address}`);
 
-  const tokenFactory = await ethers.getContractFactory("Token");
-  const token = await tokenFactory.deploy(library.address);
+  const Botchan = await ethers.getContractFactory("Botchan");
+  const botchan = await Botchan.deploy(library.address);
 
-  await token.deployed();
+  await botchan.deployed();
 
-  console.log(`token deployed to: ${token.address}`);
+  console.log(`botchan deployed to: ${botchan.address}`);
 }
 
 // We recommend this pattern to be able to use async/await everywhere
