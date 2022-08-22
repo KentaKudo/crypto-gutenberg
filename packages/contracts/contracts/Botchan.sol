@@ -45,6 +45,7 @@ contract Botchan is IToken, Ownable, ERC721Enumerable {
     public
     returns (uint256)
   {
+    _paragraph.bookId = _bookId;
     uint256 paragraphId = lib.addParagraph(_paragraph);
     uint256 tokenId = _currentTokenId++;
     tokenIdToParagraphId[tokenId] = paragraphId;
