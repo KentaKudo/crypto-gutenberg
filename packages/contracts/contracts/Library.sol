@@ -16,6 +16,7 @@ contract Library is ILibrary {
 
   struct Chapter {
     string title;
+    uint256 nextParagraphIdx;
   }
 
   struct Paragraph {
@@ -26,7 +27,7 @@ contract Library is ILibrary {
   uint256 private _nextBookId = 1;
 
   // globally unique identifier for paragraphs.
-  uint256 private _nextParagraphId;
+  uint256 private _nextParagraphId = 1;
 
   mapping(uint256 => Book) private books;
 
@@ -46,7 +47,10 @@ contract Library is ILibrary {
     });
 
     for (uint256 i = 0; i < _book.chapters.length; i++) {
-      chapters[id][i] = Chapter({ title: _book.chapters[i].title });
+      chapters[id][i] = Chapter({
+        title: _book.chapters[i].title,
+        nextParagraphIdx: 0
+      });
     }
 
     return id;
@@ -54,10 +58,22 @@ contract Library is ILibrary {
 
   function addParagraph(ParagraphInfo memory _paragragh)
     external
-    pure
+    chapterExists(_paragragh.bookId, _paragragh.chapterIndex)
     returns (uint256)
   {
-    return 1;
+    uint256 id = _nextParagraphId++;
+
+    Chapter storage chapter = chapters[_paragragh.bookId][
+      _paragragh.chapterIndex
+    ];
+    uint256 idx = chapter.nextParagraphIdx++;
+
+    paragraphs[_paragragh.bookId][_paragragh.chapterIndex][idx] = Paragraph({
+      id: id,
+      text: _paragragh.text
+    });
+
+    return id;
   }
 
   function getBooksCount() external view returns (uint256) {
@@ -66,6 +82,13 @@ contract Library is ILibrary {
 
   modifier bookExists(uint256 _id) {
     require(_id > 0 && _id < _nextBookId, "book not exists");
+    _;
+  }
+
+  modifier chapterExists(uint256 _id, uint256 _idx) {
+    require(_id > 0 && _id < _nextBookId, "book not exists");
+    Book memory book = books[_id];
+    require(_idx < book.nrOfChapters, "chapter index out of range");
     _;
   }
 
@@ -92,5 +115,22 @@ contract Library is ILibrary {
     }
 
     return cs;
+  }
+
+  function _listParagraphsByBookIdAndChapterIndex(uint256 _id, uint256 _idx)
+    internal
+    view
+    chapterExists(_id, _idx)
+    returns (Paragraph[] memory)
+  {
+    Chapter memory chapter = chapters[_id][_idx];
+    uint256 length = chapter.nextParagraphIdx;
+
+    Paragraph[] memory ps = new Paragraph[](length);
+    for (uint256 i = 0; i < length; i++) {
+      ps[i] = paragraphs[_id][_idx][i];
+    }
+
+    return ps;
   }
 }

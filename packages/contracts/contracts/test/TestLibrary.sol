@@ -16,4 +16,12 @@ contract TestLibrary is Library {
   {
     return _listChaptersByBookId(_id);
   }
+
+  function listParagraphsByBookIdAndChapterIndex(uint256 _id, uint256 _idx)
+    public
+    view
+    returns (Paragraph[] memory)
+  {
+    return _listParagraphsByBookIdAndChapterIndex(_id, _idx);
+  }
 }
