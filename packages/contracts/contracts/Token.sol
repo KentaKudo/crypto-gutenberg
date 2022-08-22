@@ -13,13 +13,22 @@ contract Token is IToken, Ownable, ERC721Enumerable {
   ILibrary public immutable lib;
 
   uint256 private _currentTokenId;
+  mapping(uint256 => uint256) tokenIdToBookId;
   mapping(uint256 => uint256) tokenIdToParagraphId;
 
   constructor(ILibrary _lib) ERC721("Crypto Gutenberg", "CRYPTOGUTENBERG") {
     lib = _lib;
   }
 
-  function mint(ILibrary.ParagraphInfo memory _paragraph)
+  function mintBook(ILibrary.BookInfo memory _book) public returns (uint256) {
+    uint256 bookId = lib.addBook(_book);
+    uint256 tokenId = _currentTokenId++;
+    tokenIdToBookId[tokenId] = bookId;
+    _mint(msg.sender, tokenId);
+    return tokenId;
+  }
+
+  function mintParagraph(ILibrary.ParagraphInfo memory _paragraph)
     public
     returns (uint256)
   {
