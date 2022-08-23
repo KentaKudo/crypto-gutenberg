@@ -1,10 +1,11 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
+import { ChakraProvider } from "@chakra-ui/react";
+import { Config, DAppProvider, Localhost } from "@usedapp/core";
+
 import "./index.css";
 import App from "./App";
 import reportWebVitals from "./reportWebVitals";
-
-import { Config, DAppProvider, Localhost } from "@usedapp/core";
 
 const config: Config = {
   readOnlyChainId: Localhost.chainId,
@@ -20,7 +21,9 @@ const root = ReactDOM.createRoot(
 root.render(
   <React.StrictMode>
     <DAppProvider config={config}>
-      <App />
+      <ChakraProvider>
+        <App />
+      </ChakraProvider>
     </DAppProvider>
   </React.StrictMode>
 );
