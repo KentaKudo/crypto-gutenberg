@@ -76,7 +76,7 @@ contract Archive is IArchive {
     return id;
   }
 
-  function getBooksCount() external view returns (uint256) {
+  function getBooksCount() public view returns (uint256) {
     return _nextBookId - 1;
   }
 
@@ -90,6 +90,15 @@ contract Archive is IArchive {
     Book memory book = books[_id];
     require(_idx < book.nrOfChapters, "chapter index out of range");
     _;
+  }
+
+  function listBooks() external view returns (Book[] memory) {
+    Book[] memory bs = new Book[](getBooksCount());
+    for (uint256 i = 1; i <= getBooksCount(); i++) {
+      bs[i - 1] = books[i];
+    }
+
+    return bs;
   }
 
   function _getBook(uint256 _id)

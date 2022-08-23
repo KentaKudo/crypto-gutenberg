@@ -3,12 +3,12 @@ import { expect } from "chai";
 import { BigNumber, ContractTransaction } from "ethers";
 import { ethers } from "hardhat";
 
-import { TestArchive } from "../typechain-types";
+import { TestArchive, Archive } from "../typechain-types";
 
 describe("Archive", () => {
-  const deploy = async () => {
+  const deploy = async (): Promise<{ archive: TestArchive }> => {
     const Archive = await ethers.getContractFactory("TestArchive");
-    const archive = await Archive.deploy();
+    const archive = (await Archive.deploy()) as TestArchive;
 
     return { archive };
   };
@@ -121,6 +121,58 @@ describe("Archive", () => {
       );
 
       expect(actualChapters[0].nextParagraphIdx).to.equal(1);
+    });
+  });
+
+  context("when listing books", () => {
+    let actual: Archive.BookStructOutput[], archive: TestArchive;
+
+    const input = [
+      {
+        title: "坊ちゃん",
+        author: "夏目漱石",
+        chapters: [
+          {
+            title: "一",
+          },
+          {
+            title: "二",
+          },
+          {
+            title: "三",
+          },
+        ],
+      },
+      {
+        title: "Winnie-the-Pooh",
+        author: "A. A. Milne",
+        chapters: [
+          {
+            title:
+              "IN WHICH WE ARE INTRODUCED TO WINNIE-THE-POOH AND SOME BEES, AND THE STORIES BEGIN",
+          },
+          {
+            title: "IN WHICH POOH GOES VISITING AND GETS INTO A TIGHT PLACE",
+          },
+          {
+            title:
+              "IN WHICH POOH AND PIGLET GO HUNTING AND NEARLY CATCH A WOOZLE",
+          },
+        ],
+      },
+    ];
+
+    before(async () => {
+      ({ archive } = await loadFixture(deploy));
+      for (const book of input) {
+        await archive.addBook(book);
+      }
+
+      actual = await archive.listBooks();
+    });
+
+    it("should list books", () => {
+      expect(actual).to.be.lengthOf(2);
     });
   });
 });
