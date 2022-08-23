@@ -10,7 +10,12 @@ import {
   StatGroup,
   StatLabel,
   StatNumber,
+  Table,
+  TableContainer,
   Text,
+  Th,
+  Thead,
+  Tr,
 } from "@chakra-ui/react";
 
 const useBooksCount = (
@@ -49,15 +54,32 @@ function App() {
     <Flex direction="column" align="center" p={20} maxW="960px" m="auto">
       <Heading>Crypto Gutenberg</Heading>
       <Text>
-        Crypto Guternberg is a project to store public domain books paragraph by
-        paragraph as on-chain NFT token.
+        Crypto Guternberg is a project to store public domain books in
+        blockchain paragraph by paragraph as on-chain NFT token.
       </Text>
-      <StatGroup>
+      <StatGroup display="flex" flexDirection="column">
         <Stat>
           <StatLabel># of books</StatLabel>
           <StatNumber>{booksCount}</StatNumber>
         </Stat>
+        <Stat>
+          <StatLabel>
+            # of books all the paragraph of which is stored on blockchain
+          </StatLabel>
+          <StatNumber>0</StatNumber>
+        </Stat>
       </StatGroup>
+      <TableContainer>
+        <Table variant="simple">
+          <Thead>
+            <Tr>
+              <Th>Title</Th>
+              <Th>Author</Th>
+              <Th isNumeric>Completion rate</Th>
+            </Tr>
+          </Thead>
+        </Table>
+      </TableContainer>
     </Flex>
   );
 }
