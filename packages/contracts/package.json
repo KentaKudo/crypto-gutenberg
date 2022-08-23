@@ -1,7 +1,8 @@
 {
   "name": "@crypto-gutenberg/contracts",
   "version": "0.1.0",
-  "main": "index.js",
+  "main": "dist/src/index.js",
+  "types": "dist/src/index.d.ts",
   "license": "MIT",
   "devDependencies": {
     "@nomicfoundation/hardhat-chai-matchers": "^1.0.3",
@@ -26,7 +27,8 @@
     "@openzeppelin/contracts": "^4.7.3"
   },
   "scripts": {
-    "compile": "npx hardhat compile",
+    "build:sol": "npx hardhat compile",
+    "build:ts": "tsc",
     "coverage": "npx hardhat coverage",
     "localhost": "npx hardhat run --network localhost scripts/deploy-botchan.ts",
     "test": "npx hardhat test"
