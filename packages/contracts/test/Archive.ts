@@ -3,18 +3,18 @@ import { expect } from "chai";
 import { BigNumber, ContractTransaction } from "ethers";
 import { ethers } from "hardhat";
 
-import { TestLibrary } from "../typechain-types";
+import { TestArchive } from "../typechain-types";
 
-describe("Library", () => {
+describe("Archive", () => {
   const deploy = async () => {
-    const Library = await ethers.getContractFactory("TestLibrary");
-    const library = await Library.deploy();
+    const Archive = await ethers.getContractFactory("TestArchive");
+    const archive = await Archive.deploy();
 
-    return { library };
+    return { archive };
   };
 
   context("when adding a new book", () => {
-    let actual: ContractTransaction, library: TestLibrary;
+    let actual: ContractTransaction, archive: TestArchive;
 
     const input = {
       title: "坊ちゃん",
@@ -33,8 +33,8 @@ describe("Library", () => {
     };
 
     before(async () => {
-      ({ library } = await loadFixture(deploy));
-      actual = await library.addBook(input);
+      ({ archive } = await loadFixture(deploy));
+      actual = await archive.addBook(input);
     });
 
     it("should return the book id", async () => {
@@ -42,12 +42,12 @@ describe("Library", () => {
     });
 
     it("should update the number of books", async () => {
-      const actualBooksCount = await library.getBooksCount();
+      const actualBooksCount = await archive.getBooksCount();
       expect(actualBooksCount).to.equal(1);
     });
 
     it("should store the book in storage", async () => {
-      const actualBook = await library.getBook(
+      const actualBook = await archive.getBook(
         1 // FIXME: actual.value does not return expected value
       );
       expect(actualBook.title).to.equal(input.title);
@@ -56,7 +56,7 @@ describe("Library", () => {
     });
 
     it("should store chapters", async () => {
-      const actualChapters = await library.listChaptersByBookId(
+      const actualChapters = await archive.listChaptersByBookId(
         1 // FIXME: actual.value does not return expected value
       );
 
@@ -68,7 +68,7 @@ describe("Library", () => {
   });
 
   context("when adding a paragraph", () => {
-    let actual: ContractTransaction, library: TestLibrary;
+    let actual: ContractTransaction, archive: TestArchive;
 
     const book = {
       title: "坊ちゃん",
@@ -93,10 +93,10 @@ describe("Library", () => {
     };
 
     before(async () => {
-      ({ library } = await loadFixture(deploy));
-      await library.addBook(book);
+      ({ archive } = await loadFixture(deploy));
+      await archive.addBook(book);
 
-      actual = await library.addParagraph(input);
+      actual = await archive.addParagraph(input);
     });
 
     it("should return paragraph id", () => {
@@ -105,7 +105,7 @@ describe("Library", () => {
 
     it("should store the paragraph in storage", async () => {
       const actualParagraphs =
-        await library.listParagraphsByBookIdAndChapterIndex(
+        await archive.listParagraphsByBookIdAndChapterIndex(
           1, // FIXME: actual.value does not return expected value
           0
         );
@@ -116,7 +116,7 @@ describe("Library", () => {
     });
 
     it("should update next paragraph index in chapter", async () => {
-      const actualChapters = await library.listChaptersByBookId(
+      const actualChapters = await archive.listChaptersByBookId(
         1 // FIXME: actual.value does not return expected value
       );
 

@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { ethers } from "ethers";
 
-import { getContractAddresses, Library } from "@crypto-gutenberg/contracts";
+import { getContractAddresses, Archive } from "@crypto-gutenberg/contracts";
 
 function App() {
   // const connectWallet = async () => {
@@ -26,13 +26,13 @@ function App() {
   // };
 
   const fetchBooks = async () => {
-    const { library: libraryAddress } = getContractAddresses(
+    const { archive: archiveAddress } = getContractAddresses(
       parseInt(process.env.REACT_APP_CHAIN_ID ?? "")
     );
 
     // @ts-ignore
     const provider = new ethers.providers.Web3Provider(window.ethereum);
-    const contract = new ethers.Contract(libraryAddress, Library.abi, provider);
+    const contract = new ethers.Contract(archiveAddress, Archive.abi, provider);
 
     const cnt = await contract.getBooksCount();
     console.log(`books count: ${cnt}`);

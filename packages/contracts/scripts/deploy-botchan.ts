@@ -6,38 +6,37 @@ import addresses from "../cache/addresses.json";
 const updateCacheAddressJSONFile = (
   chainId: number,
   contractAddresses: {
-    library: string;
+    archive: string;
     botchan: string;
   }
 ) => {
   const updated: Record<string, any> = { ...addresses };
   updated[chainId.toString()] = contractAddresses;
   writeFile("./cache/addresses.json", JSON.stringify(updated), (err) => {
-    throw err;
+    if (err) throw err;
   });
 
   console.log(`./cache/addresses.json is updated`);
 };
 
 async function main() {
-  const libraryFactory = await ethers.getContractFactory("Library");
-  const library = await libraryFactory.deploy();
+  const archiveFactory = await ethers.getContractFactory("Archive");
+  const archive = await archiveFactory.deploy();
 
-  await library.deployed();
+  await archive.deployed();
 
-  console.log(`library deployed to: ${library.address}`);
+  console.log(`archive deployed to: ${archive.address}`);
 
   const Botchan = await ethers.getContractFactory("Botchan");
-  const botchan = await Botchan.deploy(library.address);
+  const botchan = await Botchan.deploy(archive.address);
 
   await botchan.deployed();
 
   console.log(`botchan deployed to: ${botchan.address}`);
 
-  const chainId = network.config.chainId;
-  if (chainId) {
-    updateCacheAddressJSONFile(chainId, {
-      library: library.address,
+  if (network.name === "localhost") {
+    updateCacheAddressJSONFile(1337, {
+      archive: archive.address,
       botchan: botchan.address,
     });
   }

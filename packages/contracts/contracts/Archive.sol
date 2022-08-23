@@ -4,9 +4,9 @@ pragma solidity ^0.8.6;
 
 import { Ownable } from "@openzeppelin/contracts/access/Ownable.sol";
 
-import { ILibrary } from "./interfaces/ILibrary.sol";
+import { IArchive } from "./interfaces/IArchive.sol";
 
-contract Library is ILibrary {
+contract Archive is IArchive {
   struct Book {
     uint256 id;
     string title;

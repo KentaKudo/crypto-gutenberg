@@ -1,2 +1,2 @@
-export { default as Library } from "../artifacts/contracts/Library.sol/Library.json";
+export { default as Archive } from "../artifacts/contracts/Archive.sol/Archive.json";
 export { getContractAddresses } from "./addresses";

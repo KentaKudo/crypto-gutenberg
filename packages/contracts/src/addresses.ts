@@ -1,7 +1,7 @@
 import addresses from "../cache/addresses.json";
 
 interface ContractAddresses {
-  library: string;
+  archive: string;
   botchan: string;
 }
 

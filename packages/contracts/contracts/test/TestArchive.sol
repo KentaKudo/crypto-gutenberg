@@ -2,9 +2,9 @@
 
 pragma solidity ^0.8.16;
 
-import { Library } from "../Library.sol";
+import { Archive } from "../Archive.sol";
 
-contract TestLibrary is Library {
+contract TestArchive is Archive {
   function getBook(uint256 _id) public view returns (Book memory) {
     return _getBook(_id);
   }

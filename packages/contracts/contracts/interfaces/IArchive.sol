@@ -2,7 +2,7 @@
 
 pragma solidity ^0.8.6;
 
-interface ILibrary {
+interface IArchive {
   struct BookInfo {
     string title;
     string author;
