@@ -4,12 +4,24 @@ import "./index.css";
 import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 
+import { Config, DAppProvider, Localhost } from "@usedapp/core";
+
+const config: Config = {
+  readOnlyChainId: Localhost.chainId,
+  readOnlyUrls: {
+    [Localhost.chainId]: "http://127.0.0.1:8545",
+  },
+};
+
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement
 );
+
 root.render(
   <React.StrictMode>
-    <App />
+    <DAppProvider config={config}>
+      <App />
+    </DAppProvider>
   </React.StrictMode>
 );
 
