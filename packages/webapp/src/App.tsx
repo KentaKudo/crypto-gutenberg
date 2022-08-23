@@ -1,8 +1,7 @@
 import React, { useEffect } from "react";
 import { ethers } from "ethers";
 
-import Library from "@crypto-gutenberg/contracts/artifacts/contracts/Library.sol/Library.json";
-import { getContractAddresses } from "@crypto-gutenberg/contracts";
+import { getContractAddresses, Library } from "@crypto-gutenberg/contracts";
 
 function App() {
   // const connectWallet = async () => {
