@@ -46,6 +46,7 @@ function App() {
 
   return (
     <>
+      <h1>Crypto Gutenberg</h1>
       <div>Connection Status: {active ? "Connected" : "Disconnected"}</div>
       <div>Account: {account}</div>
       <div>Network ID: {chainId}</div>
