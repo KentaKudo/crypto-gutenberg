@@ -101,8 +101,8 @@ contract Archive is IArchive {
     return bs;
   }
 
-  function _getBook(uint256 _id)
-    internal
+  function getBook(uint256 _id)
+    public
     view
     bookExists(_id)
     returns (Book memory)
@@ -116,7 +116,7 @@ contract Archive is IArchive {
     bookExists(_id)
     returns (Chapter[] memory)
   {
-    Book memory book = _getBook(_id);
+    Book memory book = getBook(_id);
 
     Chapter[] memory cs = new Chapter[](book.nrOfChapters);
     for (uint256 i = 0; i < book.nrOfChapters; i++) {
