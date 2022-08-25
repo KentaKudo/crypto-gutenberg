@@ -5,7 +5,6 @@ import { getContractAddresses, Archive } from "@crypto-gutenberg/contracts";
 import { useEthers } from "@usedapp/core";
 
 import {
-  Flex,
   Heading,
   Stat,
   StatGroup,
@@ -20,6 +19,8 @@ import {
   Tbody,
   Td,
 } from "@chakra-ui/react";
+
+import Page from "./Page";
 
 const useBooks = (library: ethers.providers.JsonRpcProvider | undefined) => {
   const [books, setBooks] = useState([]);
@@ -52,7 +53,7 @@ const Home = () => {
   const [books] = useBooks(library);
 
   return (
-    <Flex direction="column" align="center" p={20} maxW="960px" m="auto">
+    <Page>
       <Heading>Crypto Gutenberg</Heading>
       <Text>
         Crypto Guternberg is a project to store public domain books in
@@ -91,7 +92,7 @@ const Home = () => {
           </Tbody>
         </Table>
       </TableContainer>
-    </Flex>
+    </Page>
   );
 };
 
