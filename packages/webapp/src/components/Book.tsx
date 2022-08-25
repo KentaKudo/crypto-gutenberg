@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { useParams } from "react-router-dom";
-import { BigNumber, ethers } from "ethers";
+import { ethers } from "ethers";
 import { useEthers } from "@usedapp/core";
 
 import { Archive, getContractAddresses } from "@crypto-gutenberg/contracts";
@@ -14,6 +14,7 @@ interface IBook {
   author: string;
   chapters: {
     title: string;
+    paragraphs: string[];
   }[];
 }
 
@@ -33,8 +34,15 @@ const useBook = (id: number) => {
   useEffect(() => {
     const fetchBook = async () => {
       const book = await contract.getBook(id);
-      const chapters: { title: string }[] = await contract.listChaptersByBookId(
-        book.id
+
+      const chapters = await Promise.all(
+        (
+          await contract.listChaptersByBookId(book.id)
+        ).map(async (chapter: { title: string }, idx: number) => {
+          const paragraphs: { text: string }[] =
+            await contract.listParagraphsByBookIdAndChapterIndex(id, idx);
+          return { ...chapter, paragraphs: paragraphs.map(({ text }) => text) };
+        })
       );
 
       setBook({ ...book, chapters });

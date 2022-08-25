@@ -126,8 +126,8 @@ contract Archive is IArchive {
     return cs;
   }
 
-  function _listParagraphsByBookIdAndChapterIndex(uint256 _id, uint256 _idx)
-    internal
+  function listParagraphsByBookIdAndChapterIndex(uint256 _id, uint256 _idx)
+    external
     view
     chapterExists(_id, _idx)
     returns (Paragraph[] memory)

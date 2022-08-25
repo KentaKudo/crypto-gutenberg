@@ -3,18 +3,18 @@ import { expect } from "chai";
 import { BigNumber, ContractTransaction } from "ethers";
 import { ethers } from "hardhat";
 
-import { TestArchive, Archive } from "../typechain-types";
+import { Archive } from "../typechain-types";
 
 describe("Archive", () => {
-  const deploy = async (): Promise<{ archive: TestArchive }> => {
-    const Archive = await ethers.getContractFactory("TestArchive");
-    const archive = (await Archive.deploy()) as TestArchive;
+  const deploy = async (): Promise<{ archive: Archive }> => {
+    const Archive = await ethers.getContractFactory("Archive");
+    const archive = (await Archive.deploy()) as Archive;
 
     return { archive };
   };
 
   context("when adding a new book", () => {
-    let actual: ContractTransaction, archive: TestArchive;
+    let actual: ContractTransaction, archive: Archive;
 
     const input = {
       title: "坊ちゃん",
@@ -68,7 +68,7 @@ describe("Archive", () => {
   });
 
   context("when adding a paragraph", () => {
-    let actual: ContractTransaction, archive: TestArchive;
+    let actual: ContractTransaction, archive: Archive;
 
     const book = {
       title: "坊ちゃん",
@@ -125,7 +125,7 @@ describe("Archive", () => {
   });
 
   context("when listing books", () => {
-    let actual: Archive.BookStructOutput[], archive: TestArchive;
+    let actual: Archive.BookStructOutput[], archive: Archive;
 
     const input = [
       {
