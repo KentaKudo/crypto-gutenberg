@@ -110,8 +110,8 @@ contract Archive is IArchive {
     return books[_id];
   }
 
-  function _listChaptersByBookId(uint256 _id)
-    internal
+  function listChaptersByBookId(uint256 _id)
+    external
     view
     bookExists(_id)
     returns (Chapter[] memory)
