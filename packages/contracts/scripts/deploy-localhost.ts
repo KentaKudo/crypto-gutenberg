@@ -8,6 +8,7 @@ const updateCacheAddressJSONFile = (
   contractAddresses: {
     archive: string;
     botchan: string;
+    winnieThePooh: string;
   }
 ) => {
   const updated: Record<string, any> = { ...addresses };
@@ -34,10 +35,18 @@ async function main() {
 
   console.log(`botchan deployed to: ${botchan.address}`);
 
+  const WinnieThePooh = await ethers.getContractFactory("WinnieThePooh");
+  const winnieThePooh = await WinnieThePooh.deploy(archive.address);
+
+  await winnieThePooh.deployed();
+
+  console.log(`winnie-the-pooh deployed to: ${winnieThePooh.address}`);
+
   if (network.name === "localhost") {
     updateCacheAddressJSONFile(1337, {
       archive: archive.address,
       botchan: botchan.address,
+      winnieThePooh: winnieThePooh.address,
     });
   }
 }

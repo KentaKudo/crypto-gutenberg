@@ -30,7 +30,7 @@
     "build:sol": "npx hardhat compile",
     "build:ts": "tsc",
     "coverage": "npx hardhat coverage",
-    "localhost": "npx hardhat run --network localhost scripts/deploy-botchan.ts",
+    "localhost": "npx hardhat run --network localhost scripts/deploy-localhost.ts",
     "test": "npx hardhat test"
   }
 }
