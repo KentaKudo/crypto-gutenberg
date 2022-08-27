@@ -54,11 +54,20 @@ const useBook = (id: number) => {
   return [book];
 };
 
-const Book = () => {
+type Props = {
+  bookIdToCollectionSymbol: Record<number, string>;
+};
+
+const Book = ({ bookIdToCollectionSymbol }: Props) => {
   const { id } = useParams();
 
   const [book] = useBook(parseInt(id ?? ""));
   if (!book) {
+    return <p>Loading...</p>;
+  }
+
+  const symbol = bookIdToCollectionSymbol[parseInt(id ?? "")];
+  if (!symbol) {
     return <p>Loading...</p>;
   }
 

@@ -3,6 +3,7 @@ import addresses from "../cache/addresses.json";
 interface ContractAddresses {
   archive: string;
   botchan: string;
+  winnieThePooh: string;
 }
 
 const getContractAddresses = (chainId: number): ContractAddresses => {

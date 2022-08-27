@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { ethers } from "ethers";
 import { getContractAddresses, Archive } from "@crypto-gutenberg/contracts";
@@ -22,35 +22,34 @@ import {
 
 import Page from "./Page";
 
-const useBooks = (library: ethers.providers.JsonRpcProvider | undefined) => {
+const useBooks = () => {
+  const { library } = useEthers();
   const [books, setBooks] = useState([]);
+
+  const { archive: archiveAddress } = getContractAddresses(
+    parseInt(process.env.REACT_APP_CHAIN_ID ?? "")
+  );
+
+  const contract = useMemo(
+    () => new ethers.Contract(archiveAddress, Archive.abi, library),
+    [library, archiveAddress]
+  );
 
   useEffect(() => {
     const fetchBooks = async () => {
-      const { archive: archiveAddress } = getContractAddresses(
-        parseInt(process.env.REACT_APP_CHAIN_ID ?? "")
-      );
-
-      const contract = new ethers.Contract(
-        archiveAddress,
-        Archive.abi,
-        library
-      );
-
       const books = await contract.listBooks();
       setBooks(books);
     };
 
     fetchBooks();
-  }, [library]);
+  }, [contract]);
 
   return [books];
 };
 
 const Home = () => {
-  const { library } = useEthers();
   const navigate = useNavigate();
-  const [books] = useBooks(library);
+  const [books] = useBooks();
 
   return (
     <Page>

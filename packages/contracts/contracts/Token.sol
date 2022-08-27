@@ -34,4 +34,8 @@ abstract contract Token is IToken, Ownable, ERC721Enumerable {
   }
 
   function defineBookInfo() internal virtual returns (IArchive.BookInfo memory);
+
+  function getBookId() external view returns (uint256) {
+    return _bookId;
+  }
 }
