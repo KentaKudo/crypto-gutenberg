@@ -129,7 +129,12 @@ const Book = ({ bookIdToContract }: Props) => {
           {fullText[cidx]?.map((paragraph, pidx) => {
             const minted = paragraphs[pidx];
             return (
-              <Flex key={pidx} gap={2} alignItems="center">
+              <Flex
+                key={pidx}
+                gap={2}
+                alignItems="center"
+                justifyContent="space-between"
+              >
                 <Paragraph minted={!!minted}>{minted ?? paragraph}</Paragraph>
                 {minted ? (
                   <Text>Minted by {"you!"}</Text>
