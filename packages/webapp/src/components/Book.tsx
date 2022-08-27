@@ -69,10 +69,11 @@ type Props = {
 
 const Book = ({ bookIdToContract }: Props) => {
   const { id } = useParams();
+  const contract = bookIdToContract[parseInt(id ?? "")];
+  const { library } = useEthers();
 
   const [fullText, setFullText] = useState<string[][]>([]);
   useEffect(() => {
-    const contract = bookIdToContract[parseInt(id ?? "")];
     if (!contract) {
       return;
     }
@@ -87,21 +88,26 @@ const Book = ({ bookIdToContract }: Props) => {
     };
 
     loadFullText();
-  }, [id, bookIdToContract]);
+  }, [id, contract]);
 
   const [book] = useBook(parseInt(id ?? ""));
   if (!book) {
     return <p>Loading...</p>;
   }
 
-  const onMint = (cidx: number, pidx: number) => {
+  const onMint = async (cidx: number, pidx: number) => {
+    if (!contract || !library) {
+      return;
+    }
+
     const paragraphInfo = {
       bookId: parseInt(id ?? ""),
       chapterIndex: cidx,
       text: fullText[cidx][pidx],
     };
 
-    console.log(`paragraphInfo: ${JSON.stringify(paragraphInfo)}`);
+    const signer = contract.connect(library.getSigner());
+    await signer.mint(paragraphInfo);
   };
 
   return (
@@ -126,7 +132,7 @@ const Book = ({ bookIdToContract }: Props) => {
               <Flex key={pidx} gap={2} alignItems="center">
                 <Paragraph minted={!!minted}>{minted ?? paragraph}</Paragraph>
                 {minted ? (
-                  <Text>Minted by {"me!"}</Text>
+                  <Text>Minted by {"you!"}</Text>
                 ) : (
                   <Button
                     onClick={() => onMint(cidx, pidx)}
