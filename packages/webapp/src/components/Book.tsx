@@ -5,8 +5,17 @@ import { useEthers } from "@usedapp/core";
 
 import { Archive, getContractAddresses } from "@crypto-gutenberg/contracts";
 
+import {
+  Button,
+  Flex,
+  Heading,
+  ListItem,
+  OrderedList,
+  Text,
+} from "@chakra-ui/react";
+
 import Page from "./Page";
-import { Heading, ListItem, OrderedList, Text } from "@chakra-ui/react";
+import Paragraph from "./Paragraph";
 
 interface IBook {
   id: number;
@@ -79,21 +88,51 @@ const Book = ({ bookIdToCollectionSymbol }: Props) => {
     return <p>Loading...</p>;
   }
 
+  const onMint = (cidx: number, pidx: number) => {
+    const paragraphInfo = {
+      bookId: parseInt(id ?? ""),
+      chapterIndex: cidx,
+      text: fullText[cidx][pidx],
+    };
+
+    console.log(`paragraphInfo: ${JSON.stringify(paragraphInfo)}`);
+  };
+
   return (
     <Page>
       <Heading>{book.title}</Heading>
       <Text>{book.author}</Text>
       <OrderedList>
         {book.chapters?.map(({ title }, idx) => (
-          <ListItem key={idx}>{title}</ListItem>
+          <ListItem key={idx}>
+            <a href={`#${title}`}>{title}</a>
+          </ListItem>
         ))}
       </OrderedList>
-      {book.chapters?.map(({ title }, idx) => (
-        <section key={idx}>
-          <Heading size="lg">{title}</Heading>
-          {fullText[idx]?.map((paragraph, idx) => (
-            <p key={idx}>{paragraph}</p>
-          ))}
+      {book.chapters?.map(({ title, paragraphs }, cidx) => (
+        <section key={cidx}>
+          <Heading id={title} size="lg">
+            {title}
+          </Heading>
+          {fullText[cidx]?.map((paragraph, pidx) => {
+            const minted = paragraphs[pidx];
+            return (
+              <Flex key={pidx} gap={2} alignItems="center">
+                <Paragraph minted={!!minted}>{minted ?? paragraph}</Paragraph>
+                {minted ? (
+                  <Text>Minted by {"me!"}</Text>
+                ) : (
+                  <Button
+                    onClick={() => onMint(cidx, pidx)}
+                    size="sm"
+                    flexShrink={0}
+                  >
+                    mint
+                  </Button>
+                )}
+              </Flex>
+            );
+          })}
         </section>
       ))}
     </Page>
