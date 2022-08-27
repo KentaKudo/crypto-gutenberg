@@ -61,13 +61,21 @@ type Props = {
 const Book = ({ bookIdToCollectionSymbol }: Props) => {
   const { id } = useParams();
 
+  const [fullText, setFullText] = useState<string[][]>([]);
+  useEffect(() => {
+    const symbol = bookIdToCollectionSymbol[parseInt(id ?? "")];
+    if (!symbol) {
+      return;
+    }
+
+    import(`../books/${symbol}.json`)
+      .then(({ chapters }) => chapters)
+      .then(setFullText)
+      .catch(console.error);
+  }, [id, bookIdToCollectionSymbol]);
+
   const [book] = useBook(parseInt(id ?? ""));
   if (!book) {
-    return <p>Loading...</p>;
-  }
-
-  const symbol = bookIdToCollectionSymbol[parseInt(id ?? "")];
-  if (!symbol) {
     return <p>Loading...</p>;
   }
 
@@ -80,6 +88,14 @@ const Book = ({ bookIdToCollectionSymbol }: Props) => {
           <ListItem key={idx}>{title}</ListItem>
         ))}
       </OrderedList>
+      {book.chapters?.map(({ title }, idx) => (
+        <section key={idx}>
+          <Heading size="lg">{title}</Heading>
+          {fullText[idx]?.map((paragraph, idx) => (
+            <p key={idx}>{paragraph}</p>
+          ))}
+        </section>
+      ))}
     </Page>
   );
 };

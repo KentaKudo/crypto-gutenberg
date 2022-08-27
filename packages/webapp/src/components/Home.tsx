@@ -82,7 +82,11 @@ const Home = () => {
           </Thead>
           <Tbody>
             {books.map(({ id, title, author }) => (
-              <Tr onClick={() => navigate(`/books/${id}`)} cursor="pointer">
+              <Tr
+                key={id}
+                onClick={() => navigate(`/books/${id}`)}
+                cursor="pointer"
+              >
                 <Td>{title}</Td>
                 <Td>{author}</Td>
                 <Td>0.00%</Td>
