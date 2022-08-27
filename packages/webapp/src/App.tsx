@@ -12,9 +12,9 @@ import {
 import Book from "./components/Book";
 import Home from "./components/Home";
 
-const useBookIdToCollectionSymbol = () => {
-  const [bookIdToCollectionSymbol, setBookIdToCollectionSymbol] = useState<
-    Record<number, string>
+const useBookIdToContract = () => {
+  const [bookIdToContract, setBookIdToContract] = useState<
+    Record<number, ethers.Contract>
   >({});
 
   const { library } = useEthers();
@@ -34,25 +34,23 @@ const useBookIdToCollectionSymbol = () => {
 
   useEffect(() => {
     const mapBookIdToCollectionSymbol = async () => {
-      const botchanSymbol = await botchan.symbol();
       const botchanBookId = await botchan.getBookId();
-      const winnieThePoohSymbol = await winnieThePooh.symbol();
       const winnieThePoohBookId = await winnieThePooh.getBookId();
 
-      setBookIdToCollectionSymbol({
-        [botchanBookId]: botchanSymbol,
-        [winnieThePoohBookId]: winnieThePoohSymbol,
+      setBookIdToContract({
+        [botchanBookId]: botchan,
+        [winnieThePoohBookId]: winnieThePooh,
       });
     };
 
     mapBookIdToCollectionSymbol();
   }, [botchan, winnieThePooh]);
 
-  return [bookIdToCollectionSymbol];
+  return [bookIdToContract];
 };
 
 const App = () => {
-  const [bookIdToCollectionSymbol] = useBookIdToCollectionSymbol();
+  const [bookIdToContract] = useBookIdToContract();
 
   return (
     <Router>
@@ -61,9 +59,7 @@ const App = () => {
         <Route path="books">
           <Route
             path=":id"
-            element={
-              <Book bookIdToCollectionSymbol={bookIdToCollectionSymbol} />
-            }
+            element={<Book bookIdToContract={bookIdToContract} />}
           />
         </Route>
       </Routes>

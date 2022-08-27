@@ -64,24 +64,30 @@ const useBook = (id: number) => {
 };
 
 type Props = {
-  bookIdToCollectionSymbol: Record<number, string>;
+  bookIdToContract: Record<number, ethers.Contract>;
 };
 
-const Book = ({ bookIdToCollectionSymbol }: Props) => {
+const Book = ({ bookIdToContract }: Props) => {
   const { id } = useParams();
 
   const [fullText, setFullText] = useState<string[][]>([]);
   useEffect(() => {
-    const symbol = bookIdToCollectionSymbol[parseInt(id ?? "")];
-    if (!symbol) {
+    const contract = bookIdToContract[parseInt(id ?? "")];
+    if (!contract) {
       return;
     }
 
-    import(`../books/${symbol}.json`)
-      .then(({ chapters }) => chapters)
-      .then(setFullText)
-      .catch(console.error);
-  }, [id, bookIdToCollectionSymbol]);
+    const loadFullText = async () => {
+      const symbol = await contract.symbol();
+
+      import(`../books/${symbol}.json`)
+        .then(({ chapters }) => chapters)
+        .then(setFullText)
+        .catch(console.error);
+    };
+
+    loadFullText();
+  }, [id, bookIdToContract]);
 
   const [book] = useBook(parseInt(id ?? ""));
   if (!book) {
