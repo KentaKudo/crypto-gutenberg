@@ -23,7 +23,10 @@ interface IBook {
   author: string;
   chapters: {
     title: string;
-    paragraphs: string[];
+    paragraphs: {
+      id: number;
+      text: string;
+    }[];
   }[];
 }
 
@@ -48,9 +51,13 @@ const useBook = (id: number) => {
         (
           await contract.listChaptersByBookId(book.id)
         ).map(async (chapter: { title: string }, idx: number) => {
-          const paragraphs: { text: string }[] =
-            await contract.listParagraphsByBookIdAndChapterIndex(id, idx);
-          return { ...chapter, paragraphs: paragraphs.map(({ text }) => text) };
+          const paragraphs: { id: number; text: string }[] = (
+            await contract.listParagraphsByBookIdAndChapterIndex(id, idx)
+          ).map(({ id, text }: { id: ethers.BigNumber; text: string }) => ({
+            id: id.toNumber(),
+            text,
+          }));
+          return { ...chapter, paragraphs };
         })
       );
 
@@ -103,11 +110,13 @@ const Book = ({ bookIdToContract }: Props) => {
     const paragraphInfo = {
       bookId: parseInt(id ?? ""),
       chapterIndex: cidx,
+      index: pidx,
       text: fullText[cidx][pidx],
     };
 
     const signer = contract.connect(library.getSigner());
     await signer.mint(paragraphInfo);
+    // TODO: update book with minted paragraph on success
   };
 
   return (
@@ -127,7 +136,7 @@ const Book = ({ bookIdToContract }: Props) => {
             {title}
           </Heading>
           {fullText[cidx]?.map((paragraph, pidx) => {
-            const minted = paragraphs[pidx];
+            const minted = paragraphs[pidx]?.id !== 0;
             return (
               <Flex
                 key={pidx}
@@ -135,7 +144,9 @@ const Book = ({ bookIdToContract }: Props) => {
                 alignItems="center"
                 justifyContent="space-between"
               >
-                <Paragraph minted={!!minted}>{minted ?? paragraph}</Paragraph>
+                <Paragraph minted={!!minted}>
+                  {minted ? paragraphs[pidx].text : paragraph}
+                </Paragraph>
                 {minted ? (
                   <Text>Minted by {"you!"}</Text>
                 ) : (
