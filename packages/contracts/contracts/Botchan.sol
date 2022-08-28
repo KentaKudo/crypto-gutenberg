@@ -22,17 +22,50 @@ contract Botchan is Token {
     returns (IArchive.BookInfo memory)
   {
     IArchive.ChapterInfo[] memory chapters = new IArchive.ChapterInfo[](11);
-    chapters[0] = IArchive.ChapterInfo({ title: unicode"一" });
-    chapters[1] = IArchive.ChapterInfo({ title: unicode"二" });
-    chapters[2] = IArchive.ChapterInfo({ title: unicode"三" });
-    chapters[3] = IArchive.ChapterInfo({ title: unicode"四" });
-    chapters[4] = IArchive.ChapterInfo({ title: unicode"五" });
-    chapters[5] = IArchive.ChapterInfo({ title: unicode"六" });
-    chapters[6] = IArchive.ChapterInfo({ title: unicode"七" });
-    chapters[7] = IArchive.ChapterInfo({ title: unicode"八" });
-    chapters[8] = IArchive.ChapterInfo({ title: unicode"九" });
-    chapters[9] = IArchive.ChapterInfo({ title: unicode"十" });
-    chapters[10] = IArchive.ChapterInfo({ title: unicode"十一" });
+    chapters[0] = IArchive.ChapterInfo({
+      title: unicode"一",
+      nrOfParagraphs: 22
+    });
+    chapters[1] = IArchive.ChapterInfo({
+      title: unicode"二",
+      nrOfParagraphs: 13
+    });
+    chapters[2] = IArchive.ChapterInfo({
+      title: unicode"三",
+      nrOfParagraphs: 8
+    });
+    chapters[3] = IArchive.ChapterInfo({
+      title: unicode"四",
+      nrOfParagraphs: 21
+    });
+    chapters[4] = IArchive.ChapterInfo({
+      title: unicode"五",
+      nrOfParagraphs: 33
+    });
+    chapters[5] = IArchive.ChapterInfo({
+      title: unicode"六",
+      nrOfParagraphs: 41
+    });
+    chapters[6] = IArchive.ChapterInfo({
+      title: unicode"七",
+      nrOfParagraphs: 67
+    });
+    chapters[7] = IArchive.ChapterInfo({
+      title: unicode"八",
+      nrOfParagraphs: 80
+    });
+    chapters[8] = IArchive.ChapterInfo({
+      title: unicode"九",
+      nrOfParagraphs: 51
+    });
+    chapters[9] = IArchive.ChapterInfo({
+      title: unicode"十",
+      nrOfParagraphs: 38
+    });
+    chapters[10] = IArchive.ChapterInfo({
+      title: unicode"十一",
+      nrOfParagraphs: 100
+    });
 
     return
       IArchive.BookInfo({

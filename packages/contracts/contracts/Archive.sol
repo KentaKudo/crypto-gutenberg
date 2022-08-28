@@ -16,7 +16,7 @@ contract Archive is IArchive {
 
   struct Chapter {
     string title;
-    uint256 nextParagraphIdx;
+    uint256 nrOfParagraphs;
   }
 
   struct Paragraph {
@@ -49,7 +49,7 @@ contract Archive is IArchive {
     for (uint256 i = 0; i < _book.chapters.length; i++) {
       chapters[id][i] = Chapter({
         title: _book.chapters[i].title,
-        nextParagraphIdx: 0
+        nrOfParagraphs: _book.chapters[i].nrOfParagraphs
       });
     }
 
@@ -61,17 +61,17 @@ contract Archive is IArchive {
     chapterExists(_paragragh.bookId, _paragragh.chapterIndex)
     returns (uint256)
   {
-    uint256 id = _nextParagraphId++;
-
     Chapter storage chapter = chapters[_paragragh.bookId][
       _paragragh.chapterIndex
     ];
-    uint256 idx = chapter.nextParagraphIdx++;
 
-    paragraphs[_paragragh.bookId][_paragragh.chapterIndex][idx] = Paragraph({
-      id: id,
-      text: _paragragh.text
-    });
+    require(_paragragh.index < chapter.nrOfParagraphs, "index out of range");
+
+    uint256 id = _nextParagraphId++;
+
+    paragraphs[_paragragh.bookId][_paragragh.chapterIndex][
+      _paragragh.index
+    ] = Paragraph({ id: id, text: _paragragh.text });
 
     return id;
   }
@@ -133,7 +133,7 @@ contract Archive is IArchive {
     returns (Paragraph[] memory)
   {
     Chapter memory chapter = chapters[_id][_idx];
-    uint256 length = chapter.nextParagraphIdx;
+    uint256 length = chapter.nrOfParagraphs;
 
     Paragraph[] memory ps = new Paragraph[](length);
     for (uint256 i = 0; i < length; i++) {

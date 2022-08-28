@@ -23,34 +23,44 @@ contract WinnieThePooh is Token {
   {
     IArchive.ChapterInfo[] memory chapters = new IArchive.ChapterInfo[](10);
     chapters[0] = IArchive.ChapterInfo({
-      title: "IN WHICH WE ARE INTRODUCED TO WINNIE-THE-POOH AND SOME BEES, AND THE STORIES BEGIN"
+      title: "IN WHICH WE ARE INTRODUCED TO WINNIE-THE-POOH AND SOME BEES, AND THE STORIES BEGIN",
+      nrOfParagraphs: 0 // TODO
     });
     chapters[1] = IArchive.ChapterInfo({
-      title: "IN WHICH POOH GOES VISITING AND GETS INTO A TIGHT PLACE"
+      title: "IN WHICH POOH GOES VISITING AND GETS INTO A TIGHT PLACE",
+      nrOfParagraphs: 0 // TODO
     });
     chapters[2] = IArchive.ChapterInfo({
-      title: "IN WHICH POOH AND PIGLET GO HUNTING AND NEARLY CATCH A WOOZLE"
+      title: "IN WHICH POOH AND PIGLET GO HUNTING AND NEARLY CATCH A WOOZLE",
+      nrOfParagraphs: 0 // TODO
     });
     chapters[3] = IArchive.ChapterInfo({
-      title: "IN WHICH EEYORE LOSES A TAIL AND POOH FINDS ONE"
+      title: "IN WHICH EEYORE LOSES A TAIL AND POOH FINDS ONE",
+      nrOfParagraphs: 0 // TODO
     });
     chapters[4] = IArchive.ChapterInfo({
-      title: "IN WHICH PIGLET MEETS A HEFFALUMP"
+      title: "IN WHICH PIGLET MEETS A HEFFALUMP",
+      nrOfParagraphs: 0 // TODO
     });
     chapters[5] = IArchive.ChapterInfo({
-      title: "IN WHICH EEYORE HAS A BIRTHDAY AND GETS TWO PRESENTS"
+      title: "IN WHICH EEYORE HAS A BIRTHDAY AND GETS TWO PRESENTS",
+      nrOfParagraphs: 0 // TODO
     });
     chapters[6] = IArchive.ChapterInfo({
-      title: "IN WHICH KANGA AND BABY ROO COME TO THE FOREST, AND PIGLET HAS A BATH"
+      title: "IN WHICH KANGA AND BABY ROO COME TO THE FOREST, AND PIGLET HAS A BATH",
+      nrOfParagraphs: 0 // TODO
     });
     chapters[7] = IArchive.ChapterInfo({
-      title: "IN WHICH CHRISTOPHER ROBIN LEADS AN EXPOTITION TO THE NORTH POLE"
+      title: "IN WHICH CHRISTOPHER ROBIN LEADS AN EXPOTITION TO THE NORTH POLE",
+      nrOfParagraphs: 0 // TODO
     });
     chapters[8] = IArchive.ChapterInfo({
-      title: "IN WHICH PIGLET IS ENTIRELY SURROUNDED BY WATER"
+      title: "IN WHICH PIGLET IS ENTIRELY SURROUNDED BY WATER",
+      nrOfParagraphs: 0 // TODO
     });
     chapters[9] = IArchive.ChapterInfo({
-      title: "IN WHICH CHRISTOPHER ROBIN GIVES A POOH PARTY, AND WE SAY GOOD-BYE"
+      title: "IN WHICH CHRISTOPHER ROBIN GIVES A POOH PARTY, AND WE SAY GOOD-BYE",
+      nrOfParagraphs: 0 // TODO
     });
 
     return

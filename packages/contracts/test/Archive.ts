@@ -22,12 +22,15 @@ describe("Archive", () => {
       chapters: [
         {
           title: "一",
+          nrOfParagraphs: 12,
         },
         {
           title: "二",
+          nrOfParagraphs: 34,
         },
         {
           title: "三",
+          nrOfParagraphs: 56,
         },
       ],
     };
@@ -63,6 +66,9 @@ describe("Archive", () => {
       expect(actualChapters).to.be.lengthOf(input.chapters.length);
       for (let i = 0; i < input.chapters.length; i++) {
         expect(actualChapters[i].title).to.equal(input.chapters[i].title);
+        expect(actualChapters[i].nrOfParagraphs).to.equal(
+          input.chapters[i].nrOfParagraphs
+        );
       }
     });
   });
@@ -76,12 +82,15 @@ describe("Archive", () => {
       chapters: [
         {
           title: "一",
+          nrOfParagraphs: 12,
         },
         {
           title: "二",
+          nrOfParagraphs: 34,
         },
         {
           title: "三",
+          nrOfParagraphs: 56,
         },
       ],
     };
@@ -89,6 +98,7 @@ describe("Archive", () => {
     const input = {
       bookId: 1, // FIXME: value.toNumber() does not have expected value
       chapterIndex: 0,
+      index: 6,
       text: "親譲おやゆずりの無鉄砲むてっぽうで小供の時から損ばかりしている。小学校に居る時分学校の二階から飛び降りて一週間ほど腰こしを抜ぬかした事がある。なぜそんな無闇むやみをしたと聞く人があるかも知れぬ。別段深い理由でもない。新築の二階から首を出していたら、同級生の一人が冗談じょうだんに、いくら威張いばっても、そこから飛び降りる事は出来まい。弱虫やーい。と囃はやしたからである。小使こづかいに負ぶさって帰って来た時、おやじが大きな眼めをして二階ぐらいから飛び降りて腰を抜かす奴やつがあるかと云いったから、この次は抜かさずに飛んで見せますと答えた。",
     };
 
@@ -110,17 +120,22 @@ describe("Archive", () => {
           0
         );
 
-      expect(actualParagraphs).to.be.lengthOf(1);
-      expect(actualParagraphs[0].id).to.not.equal(0);
-      expect(actualParagraphs[0].text).to.equal(input.text);
+      expect(actualParagraphs).to.be.lengthOf(
+        book.chapters[input.chapterIndex].nrOfParagraphs
+      );
+      expect(actualParagraphs[input.index].id.toNumber()).to.not.equal(0);
+      expect(actualParagraphs[input.index].text).to.equal(input.text);
     });
 
-    it("should update next paragraph index in chapter", async () => {
-      const actualChapters = await archive.listChaptersByBookId(
-        1 // FIXME: actual.value does not return expected value
-      );
-
-      expect(actualChapters[0].nextParagraphIdx).to.equal(1);
+    it("should be reverted if index is out of range", async () => {
+      await expect(
+        archive.addParagraph({
+          bookId: 1, // FIXME: value.toNumber() does not have expected value
+          chapterIndex: 0,
+          index: book.chapters[0].nrOfParagraphs,
+          text: "blablabla",
+        })
+      ).to.be.revertedWith("index out of range");
     });
   });
 
@@ -134,12 +149,15 @@ describe("Archive", () => {
         chapters: [
           {
             title: "一",
+            nrOfParagraphs: 12,
           },
           {
             title: "二",
+            nrOfParagraphs: 34,
           },
           {
             title: "三",
+            nrOfParagraphs: 56,
           },
         ],
       },
@@ -150,13 +168,16 @@ describe("Archive", () => {
           {
             title:
               "IN WHICH WE ARE INTRODUCED TO WINNIE-THE-POOH AND SOME BEES, AND THE STORIES BEGIN",
+            nrOfParagraphs: 78,
           },
           {
             title: "IN WHICH POOH GOES VISITING AND GETS INTO A TIGHT PLACE",
+            nrOfParagraphs: 90,
           },
           {
             title:
               "IN WHICH POOH AND PIGLET GO HUNTING AND NEARLY CATCH A WOOZLE",
+            nrOfParagraphs: 12,
           },
         ],
       },
@@ -173,6 +194,57 @@ describe("Archive", () => {
 
     it("should list books", () => {
       expect(actual).to.be.lengthOf(2);
+    });
+  });
+
+  context("when listing paragraphs", () => {
+    let actual: Archive.ParagraphStructOutput[], archive: Archive;
+
+    const book = {
+      title: "坊ちゃん",
+      author: "夏目漱石",
+      chapters: [
+        {
+          title: "一",
+          nrOfParagraphs: 12,
+        },
+        {
+          title: "二",
+          nrOfParagraphs: 34,
+        },
+        {
+          title: "三",
+          nrOfParagraphs: 56,
+        },
+      ],
+    };
+
+    before(async () => {
+      ({ archive } = await loadFixture(deploy));
+      await archive.addBook(book);
+
+      // add a paragraph
+      await archive.addParagraph({
+        bookId: 1, // FIXME: value.toNumber() does not have expected value
+        chapterIndex: 0,
+        index: 6,
+        text: "blablabla",
+      });
+
+      actual = await archive.listParagraphsByBookIdAndChapterIndex(1, 0);
+    });
+
+    it("should return all the paragraphs including empty ones", () => {
+      expect(actual).to.be.lengthOf(book.chapters[0].nrOfParagraphs);
+    });
+
+    it("should return empty paragraphs", () => {
+      expect(actual[0].id.toNumber()).to.equal(0);
+    });
+
+    it("should return stored paragraph", () => {
+      expect(actual[6].id.toNumber()).to.not.equal(0);
+      expect(actual[6].text).to.not.be.empty;
     });
   });
 });

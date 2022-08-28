@@ -11,11 +11,13 @@ interface IArchive {
 
   struct ChapterInfo {
     string title;
+    uint256 nrOfParagraphs;
   }
 
   struct ParagraphInfo {
     uint256 bookId;
     uint256 chapterIndex;
+    uint256 index;
     string text;
   }
 
