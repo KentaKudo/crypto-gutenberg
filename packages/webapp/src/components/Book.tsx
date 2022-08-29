@@ -5,17 +5,11 @@ import { useEthers } from "@usedapp/core";
 
 import { Archive, getContractAddresses } from "@crypto-gutenberg/contracts";
 
-import {
-  Button,
-  Flex,
-  Heading,
-  ListItem,
-  OrderedList,
-  Text,
-} from "@chakra-ui/react";
+import { Flex, Heading, ListItem, OrderedList, Text } from "@chakra-ui/react";
 
 import Page from "./Page";
 import Paragraph from "./Paragraph";
+import MintButton from "./MintButton";
 
 interface IBook {
   id: number;
@@ -77,7 +71,6 @@ type Props = {
 const Book = ({ bookIdToContract }: Props) => {
   const { id } = useParams();
   const contract = bookIdToContract[parseInt(id ?? "")];
-  const { library } = useEthers();
 
   const [fullText, setFullText] = useState<string[][]>([]);
   useEffect(() => {
@@ -101,23 +94,6 @@ const Book = ({ bookIdToContract }: Props) => {
   if (!book) {
     return <p>Loading...</p>;
   }
-
-  const onMint = async (cidx: number, pidx: number) => {
-    if (!contract || !library) {
-      return;
-    }
-
-    const paragraphInfo = {
-      bookId: parseInt(id ?? ""),
-      chapterIndex: cidx,
-      index: pidx,
-      text: fullText[cidx][pidx],
-    };
-
-    const signer = contract.connect(library.getSigner());
-    await signer.mint(paragraphInfo);
-    // TODO: update book with minted paragraph on success
-  };
 
   return (
     <Page>
@@ -150,13 +126,13 @@ const Book = ({ bookIdToContract }: Props) => {
                 {minted ? (
                   <Text>Minted by {"you!"}</Text>
                 ) : (
-                  <Button
-                    onClick={() => onMint(cidx, pidx)}
-                    size="sm"
-                    flexShrink={0}
-                  >
-                    mint
-                  </Button>
+                  <MintButton
+                    bookId={parseInt(id ?? "")}
+                    contract={contract}
+                    cidx={cidx}
+                    pidx={pidx}
+                    text={fullText[cidx][pidx]}
+                  />
                 )}
               </Flex>
             );
