@@ -247,4 +247,56 @@ describe("Archive", () => {
       expect(actual[6].text).to.not.be.empty;
     });
   });
+
+  context("when returning stats for a book", () => {
+    let actual: [BigNumber, BigNumber], archive: Archive;
+
+    const book = {
+      title: "坊ちゃん",
+      author: "夏目漱石",
+      chapters: [
+        {
+          title: "一",
+          nrOfParagraphs: 12,
+        },
+        {
+          title: "二",
+          nrOfParagraphs: 34,
+        },
+        {
+          title: "三",
+          nrOfParagraphs: 56,
+        },
+      ],
+    };
+
+    before(async () => {
+      ({ archive } = await loadFixture(deploy));
+      await archive.addBook(book);
+
+      for (let cidx = 0; cidx < book.chapters.length; cidx++) {
+        for (let pidx = 0; pidx < 3; pidx++) {
+          await archive.addParagraph({
+            bookId: 1, // FIXME: value.toNumber() does not have expected value
+            chapterIndex: cidx,
+            index: pidx,
+            text: "blablabla",
+          });
+        }
+      }
+
+      actual = await archive.getStatsByBookId(1);
+    });
+
+    it("should return stat numbers", () => {
+      const [actualMintedNr, actualTotalNr] = actual;
+      expect(actualMintedNr).to.equal(9);
+
+      const expectedTotalNr = book.chapters.reduce(
+        (acc, cur) => acc + cur.nrOfParagraphs,
+        0
+      );
+      expect(actualTotalNr).to.equal(expectedTotalNr);
+    });
+  });
 });

@@ -142,4 +142,29 @@ contract Archive is IArchive {
 
     return ps;
   }
+
+  function getStatsByBookId(uint256 _id)
+    external
+    view
+    bookExists(_id)
+    returns (uint256, uint256)
+  {
+    Book memory book = getBook(_id);
+
+    uint256 totalNrOfParagraphs;
+    uint256 mintedNrOfParagraphs;
+    for (uint256 cidx = 0; cidx < book.nrOfChapters; cidx++) {
+      Chapter memory chapter = chapters[_id][cidx];
+      totalNrOfParagraphs += chapter.nrOfParagraphs;
+
+      for (uint256 pidx = 0; pidx < chapter.nrOfParagraphs; pidx++) {
+        Paragraph memory paragraph = paragraphs[_id][cidx][pidx];
+        if (paragraph.id != 0) {
+          mintedNrOfParagraphs += 1;
+        }
+      }
+    }
+
+    return (mintedNrOfParagraphs, totalNrOfParagraphs);
+  }
 }
