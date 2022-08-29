@@ -289,14 +289,14 @@ describe("Archive", () => {
     });
 
     it("should return stat numbers", () => {
-      const [actualMintedNr, actualTotalNr] = actual;
-      expect(actualMintedNr).to.equal(9);
+      const [actualMintedCount, actualTotalCount] = actual;
+      expect(actualMintedCount).to.equal(9);
 
-      const expectedTotalNr = book.chapters.reduce(
+      const expectedTotalCount = book.chapters.reduce(
         (acc, cur) => acc + cur.nrOfParagraphs,
         0
       );
-      expect(actualTotalNr).to.equal(expectedTotalNr);
+      expect(actualTotalCount).to.equal(expectedTotalCount);
     });
   });
 });

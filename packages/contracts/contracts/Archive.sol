@@ -151,20 +151,20 @@ contract Archive is IArchive {
   {
     Book memory book = getBook(_id);
 
-    uint256 totalNrOfParagraphs;
-    uint256 mintedNrOfParagraphs;
+    uint256 totalParagraphsCount;
+    uint256 mintedParagraphsCount;
     for (uint256 cidx = 0; cidx < book.nrOfChapters; cidx++) {
       Chapter memory chapter = chapters[_id][cidx];
-      totalNrOfParagraphs += chapter.nrOfParagraphs;
+      totalParagraphsCount += chapter.nrOfParagraphs;
 
       for (uint256 pidx = 0; pidx < chapter.nrOfParagraphs; pidx++) {
         Paragraph memory paragraph = paragraphs[_id][cidx][pidx];
         if (paragraph.id != 0) {
-          mintedNrOfParagraphs += 1;
+          mintedParagraphsCount += 1;
         }
       }
     }
 
-    return (mintedNrOfParagraphs, totalNrOfParagraphs);
+    return (mintedParagraphsCount, totalParagraphsCount);
   }
 }

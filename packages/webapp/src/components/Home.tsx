@@ -22,9 +22,17 @@ import {
 
 import Page from "./Page";
 
+type Book = {
+  id: number;
+  title: string;
+  author: string;
+  totalParagraphsCount: number;
+  mintedParagraphsCount: number;
+};
+
 const useBooks = () => {
   const { library } = useEthers();
-  const [books, setBooks] = useState([]);
+  const [books, setBooks] = useState<Book[]>([]);
 
   const { archive: archiveAddress } = getContractAddresses(
     parseInt(process.env.REACT_APP_CHAIN_ID ?? "")
@@ -37,7 +45,21 @@ const useBooks = () => {
 
   useEffect(() => {
     const fetchBooks = async () => {
-      const books = await contract.listBooks();
+      const books = await Promise.all(
+        (
+          await contract.listBooks()
+        ).map(async (book: Book) => {
+          const [mintedParagraphsCount, totalParagraphsCount] =
+            await contract.getStatsByBookId(book.id);
+
+          return {
+            ...book,
+            totalParagraphsCount,
+            mintedParagraphsCount,
+          };
+        })
+      );
+
       setBooks(books);
     };
 
@@ -81,17 +103,32 @@ const Home = () => {
             </Tr>
           </Thead>
           <Tbody>
-            {books.map(({ id, title, author }) => (
-              <Tr
-                key={id}
-                onClick={() => navigate(`/books/${id}`)}
-                cursor="pointer"
-              >
-                <Td>{title}</Td>
-                <Td>{author}</Td>
-                <Td>0.00%</Td>
-              </Tr>
-            ))}
+            {books.map(
+              ({
+                id,
+                title,
+                author,
+                mintedParagraphsCount,
+                totalParagraphsCount,
+              }) => {
+                const completionRate =
+                  (mintedParagraphsCount * 100.0) / totalParagraphsCount;
+                return (
+                  <Tr
+                    key={id}
+                    onClick={() => navigate(`/books/${id}`)}
+                    cursor="pointer"
+                  >
+                    <Td>{title}</Td>
+                    <Td>{author}</Td>
+                    <Td>
+                      {completionRate.toFixed(2)}
+                      {isNaN(completionRate) ? "" : "%"}
+                    </Td>
+                  </Tr>
+                );
+              }
+            )}
           </Tbody>
         </Table>
       </TableContainer>
