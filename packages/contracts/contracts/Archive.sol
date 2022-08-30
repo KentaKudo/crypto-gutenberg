@@ -53,6 +53,8 @@ contract Archive is IArchive {
       });
     }
 
+    emit BookAdded(id, _book.title, _book.author, _book.chapters.length);
+
     return id;
   }
 
@@ -72,6 +74,14 @@ contract Archive is IArchive {
     paragraphs[_paragragh.bookId][_paragragh.chapterIndex][
       _paragragh.index
     ] = Paragraph({ id: id, text: _paragragh.text });
+
+    emit ParagraphAdded(
+      id,
+      _paragragh.bookId,
+      _paragragh.chapterIndex,
+      _paragragh.index,
+      _paragragh.text
+    );
 
     return id;
   }

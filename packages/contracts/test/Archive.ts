@@ -71,6 +71,12 @@ describe("Archive", () => {
         );
       }
     });
+
+    it("should emit event", async () => {
+      await expect(archive.addBook(input))
+        .to.emit(archive, "BookAdded")
+        .withArgs(2, input.title, input.author, input.chapters.length);
+    });
   });
 
   context("when adding a paragraph", () => {
@@ -136,6 +142,24 @@ describe("Archive", () => {
           text: "blablabla",
         })
       ).to.be.revertedWith("index out of range");
+    });
+
+    it("should emit event", async () => {
+      const paragraph = {
+        ...input,
+        index: input.index + 1,
+        text: "blablabla",
+      };
+
+      await expect(archive.addParagraph(paragraph))
+        .to.emit(archive, "ParagraphAdded")
+        .withArgs(
+          2,
+          paragraph.bookId,
+          paragraph.chapterIndex,
+          paragraph.index,
+          paragraph.text
+        );
     });
   });
 
