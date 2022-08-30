@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { useParams } from "react-router-dom";
 import { ethers } from "ethers";
-import { useEthers } from "@usedapp/core";
+import { useEthers, useLogs } from "@usedapp/core";
 
 import { Archive, getContractAddresses } from "@crypto-gutenberg/contracts";
 
@@ -64,14 +64,7 @@ const useBook = (id: number) => {
   return [book];
 };
 
-type Props = {
-  bookIdToContract: Record<number, ethers.Contract>;
-};
-
-const Book = ({ bookIdToContract }: Props) => {
-  const { id } = useParams();
-  const contract = bookIdToContract[parseInt(id ?? "")];
-
+const useFullText = (contract: ethers.Contract) => {
   const [fullText, setFullText] = useState<string[][]>([]);
   useEffect(() => {
     if (!contract) {
@@ -88,7 +81,37 @@ const Book = ({ bookIdToContract }: Props) => {
     };
 
     loadFullText();
-  }, [id, contract]);
+  }, [contract]);
+
+  return [fullText];
+};
+
+type Props = {
+  bookIdToContract: Record<number, ethers.Contract>;
+};
+
+const Book = ({ bookIdToContract }: Props) => {
+  const { id } = useParams();
+
+  const { library } = useEthers();
+  const { archive: archiveAddress } = getContractAddresses(
+    parseInt(process.env.REACT_APP_CHAIN_ID ?? "")
+  );
+
+  const archiveContract = useMemo(
+    () => new ethers.Contract(archiveAddress, Archive.abi, library),
+    [archiveAddress, library]
+  );
+
+  const bookContract = bookIdToContract[parseInt(id ?? "")];
+  const [fullText] = useFullText(bookContract);
+
+  const logs = useLogs({
+    contract: archiveContract,
+    event: "ParagraphAdded",
+    args: [],
+  });
+  console.log(`logs: ${JSON.stringify(logs)}`);
 
   const [book] = useBook(parseInt(id ?? ""));
   if (!book) {
@@ -128,7 +151,7 @@ const Book = ({ bookIdToContract }: Props) => {
                 ) : (
                   <MintButton
                     bookId={parseInt(id ?? "")}
-                    contract={contract}
+                    contract={bookContract}
                     cidx={cidx}
                     pidx={pidx}
                     text={fullText[cidx][pidx]}
