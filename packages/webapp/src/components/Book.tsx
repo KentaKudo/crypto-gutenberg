@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { useParams } from "react-router-dom";
 import { ethers } from "ethers";
-import { useEthers, useLogs } from "@usedapp/core";
+import { useEthers } from "@usedapp/core";
 
 import { Archive, getContractAddresses } from "@crypto-gutenberg/contracts";
 
@@ -61,7 +61,7 @@ const useBook = (id: number) => {
     fetchBook();
   }, [contract, id]);
 
-  return [book];
+  return [book] as const;
 };
 
 const useFullText = (contract: ethers.Contract) => {
@@ -83,7 +83,7 @@ const useFullText = (contract: ethers.Contract) => {
     loadFullText();
   }, [contract]);
 
-  return [fullText];
+  return [fullText] as const;
 };
 
 type Props = {
@@ -93,25 +93,8 @@ type Props = {
 const Book = ({ bookIdToContract }: Props) => {
   const { id } = useParams();
 
-  const { library } = useEthers();
-  const { archive: archiveAddress } = getContractAddresses(
-    parseInt(process.env.REACT_APP_CHAIN_ID ?? "")
-  );
-
-  const archiveContract = useMemo(
-    () => new ethers.Contract(archiveAddress, Archive.abi, library),
-    [archiveAddress, library]
-  );
-
   const bookContract = bookIdToContract[parseInt(id ?? "")];
   const [fullText] = useFullText(bookContract);
-
-  const logs = useLogs({
-    contract: archiveContract,
-    event: "ParagraphAdded",
-    args: [],
-  });
-  console.log(`logs: ${JSON.stringify(logs)}`);
 
   const [book] = useBook(parseInt(id ?? ""));
   if (!book) {
